@@ -17,64 +17,81 @@
     background-repeat: no-repeat;"
     class="flex justify-center h-screen items-center"
 >
+    <!-- Audio tidak pakai autoplay, akan dijalankan manual oleh script -->
+    <audio id="musik" loop>
+        <source src="happy_birthday_guitar_instrumental.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+    </audio>
 
-<audio id="musik" autoplay loop>
-  <source src="happy_birthday_guitar_instrumental.mp3" type="audio/mpeg" />
-  Your browser does not support the audio element.
-</audio>
-
-    <div class="bg-white border px-10 py-8 border-4 border-pink-300 sdaow-lg shadow-blue-300 rounded-xl text-center animate__animated animate__backInDown m-8 w-100" id="kartu"
-    >
+    <div class="bg-white border px-10 py-8 border-4 border-pink-300 sdaow-lg shadow-blue-300 rounded-xl text-center animate__animated animate__backInDown m-8 w-100" id="kartu">
         <h1 class="text-2xl">🎊Happy Birthday🎊</h1>
         <h2 class="text-2xl text-pink-500 font-bold animate__animated animate__tada animate__infinite mt-3">TaTa</h2>
-        <button class="p-2 bg-pink-300 text-white rounded mt-5 hover:bg-pink-600 transition ease-in w-full animate__animated animate__delay-1s animate__pulse" onclick="ubahkartu()"
-        >
-        Pliss KLIK nya 2x!!!
+        <button class="p-2 bg-pink-300 text-white rounded mt-5 hover:bg-pink-600 transition ease-in w-full animate__animated animate__delay-1s animate__pulse" onclick="mulaiAudioDanUbahKartu()">
+            Pliss KLIK nya 2x!!!
         </button>
     </div>
-<script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
-<script>
-const end = Date.now() + 15 * 1000;
 
-// go Buckeyes!
-const colors = ["#bb0000", "#ffffff"];
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script>
+        // Ambil elemen audio
+        const audio = document.getElementById("musik");
+        let audioDimulai = false; // flag apakah audio sudah berjalan
 
-(function frame() {
-  confetti({
-    particleCount: 2,
-    angle: 60,
-    spread: 55,
-    origin: { x: 0 },
-    colors: colors,
-  });
+        // Fungsi untuk memulai audio (hanya sekali)
+        function mulaiAudio() {
+            if (!audioDimulai) {
+                audio.play().then(() => {
+                    audioDimulai = true;
+                }).catch(err => {
+                    console.log("Audio gagal diputar: ", err);
+                });
+            }
+        }
 
-  confetti({
-    particleCount: 2,
-    angle: 120,
-    spread: 55,
-    origin: { x: 1 },
-    colors: colors,
-  });
+        // Fungsi yang dipanggil tombol pertama
+        function mulaiAudioDanUbahKartu() {
+            mulaiAudio(); // mulai audio jika belum
+            ubahkartu();  // lalu ubah konten kartu
+        }
 
-  if (Date.now() < end) {
-    requestAnimationFrame(frame);
-  }
-})(); 
-let kartu = document.getElementById("kartu");
-function ubahkartu() {
-  kartu.innerHTML = `<h1 class="mt-1 font-semibold text-wrap animate__animated animate__zoomIn">Selamat Ulang Tahun... Semoga semoga dan semoga aamiin. doanya isi sendiri aja hehe... maap ucapannya h+1</h1>
-<h1 class="mt-1 font-semibold text-wrap animate__animated animate__zoomIn">Thank you </h1>
-<h2 class="mt-1 animate__animated animate__fadeIn">--Dari VIIII 🎂</h2>
-<button class="p-2 bg-pink-300 text-white rounded mt-5 hover:bg-pink-600 transition ease-in w-full animate__animated animate__delay-1s animate__pulse" onclick="refresh()"
-        >
-        udah segitu aja sii ✌️
-        </button>`;
-}
-function refresh() {
-  location.reload();
-  } 
+        // Konfeti dari awal (tetap berjalan tanpa perlu klik)
+        const end = Date.now() + 15 * 1000;
+        const colors = ["#bb0000", "#ffffff"];
 
-</script>
-</style>    
+        (function frame() {
+            confetti({
+                particleCount: 2,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: colors,
+            });
+            confetti({
+                particleCount: 2,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: colors,
+            });
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        })();
+
+        let kartu = document.getElementById("kartu");
+
+        function ubahkartu() {
+            kartu.innerHTML = `<h1 class="mt-1 font-semibold text-wrap animate__animated animate__zoomIn">Selamat Ulang Tahun... Semoga semoga dan semoga aamiin. doanya isi sendiri aja hehe... maap ucapannya h+1</h1>
+            <h1 class="mt-1 font-semibold text-wrap animate__animated animate__zoomIn">Thank you </h1>
+            <h2 class="mt-1 animate__animated animate__fadeIn">--Dari VIIII 🎂</h2>
+            <button class="p-2 bg-pink-300 text-white rounded mt-5 hover:bg-pink-600 transition ease-in w-full animate__animated animate__delay-1s animate__pulse" onclick="refresh()">
+                udah segitu aja sii ✌️
+            </button>`;
+        }
+
+        function refresh() {
+            location.reload();
+        }
+    </script>
 </body>
 </html>
