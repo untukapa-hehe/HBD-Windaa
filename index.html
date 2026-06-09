@@ -5,93 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TesT_12</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
-<body
-    style="background-image: url('KirimPAPDONG.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;"
-    class="flex justify-center h-screen items-center"
->
-    <!-- Audio tidak pakai autoplay, akan dijalankan manual oleh script -->
-    <audio id="musik" loop>
-        <source src="happy_birthday_guitar_instrumental.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-    </audio>
+<body style="background-image: url('KirimPAPDONG.png'); background-size: cover; background-position: center; background-repeat: no-repeat;" class="flex justify-center h-screen items-center">
 
-    <div class="bg-white border px-10 py-8 border-4 border-pink-300 sdaow-lg shadow-blue-300 rounded-xl text-center animate__animated animate__backInDown m-8 w-100" id="kartu">
-        <h1 class="text-2xl">🎊Happy Birthday🎊</h1>
-        <h2 class="text-2xl text-pink-500 font-bold animate__animated animate__tada animate__infinite mt-3">TaTa</h2>
-        <button class="p-2 bg-pink-300 text-white rounded mt-5 hover:bg-pink-600 transition ease-in w-full animate__animated animate__delay-1s animate__pulse" onclick="mulaiAudioDanUbahKartu()">
-            Pliss KLIK nya 2x!!!
-        </button>
-    </div>
+<audio id="musik" loop>
+  <source src="happy_birthday_guitar_instrumental.mp3" type="audio/mpeg" />
+</audio>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
-    <script>
-        // Ambil elemen audio
-        const audio = document.getElementById("musik");
-        let audioDimulai = false; // flag apakah audio sudah berjalan
+<div class="bg-white border px-10 py-8 border-4 border-pink-300 rounded-xl text-center animate__animated animate__backInDown m-8 w-100" id="kartu">
+    <h1 class="text-2xl">🎊Happy Birthday🎊</h1>
+    <h2 class="text-2xl text-pink-500 font-bold animate__animated animate__tada animate__infinite mt-3">TaTa</h2>
+    <button class="p-2 bg-pink-300 text-white rounded mt-5 hover:bg-pink-600 transition ease-in w-full" id="tombolAksi">
+        Pliss KLIK nya 2x!!!
+    </button>
+</div>
 
-        // Fungsi untuk memulai audio (hanya sekali)
-        function mulaiAudio() {
-            if (!audioDimulai) {
-                audio.play().then(() => {
-                    audioDimulai = true;
-                }).catch(err => {
-                    console.log("Audio gagal diputar: ", err);
-                });
-            }
-        }
+<script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+<script>
+// === Audio handling paling kuat ===
+const audio = document.getElementById("musik");
+let audioPlayed = false;
 
-        // Fungsi yang dipanggil tombol pertama
-        function mulaiAudioDanUbahKartu() {
-            mulaiAudio(); // mulai audio jika belum
-            ubahkartu();  // lalu ubah konten kartu
-        }
+function playAudio() {
+    if (!audioPlayed) {
+        audio.play().then(() => {
+            audioPlayed = true;
+            console.log("Audio berjalan");
+        }).catch(err => {
+            console.log("Gagal main audio:", err);
+        });
+    }
+}
 
-        // Konfeti dari awal (tetap berjalan tanpa perlu klik)
-        const end = Date.now() + 15 * 1000;
-        const colors = ["#bb0000", "#ffffff"];
+// === Mulai audio saat pengguna pertama kali klik di mana pun di halaman ===
+document.body.addEventListener("click", function sekali() {
+    playAudio();
+    // Setelah itu, hapus listener agar tidak berulang (opsional)
+    document.body.removeEventListener("click", sekali);
+}, { once: true }); // otomatis hanya sekali
 
-        (function frame() {
-            confetti({
-                particleCount: 2,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: colors,
-            });
-            confetti({
-                particleCount: 2,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: colors,
-            });
-            if (Date.now() < end) {
-                requestAnimationFrame(frame);
-            }
-        })();
+// === Confetti tetap berjalan dari awal ===
+const end = Date.now() + 15 * 1000;
+const colors = ["#bb0000", "#ffffff"];
+(function frame() {
+  confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: colors });
+  confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: colors });
+  if (Date.now() < end) requestAnimationFrame(frame);
+})();
 
-        let kartu = document.getElementById("kartu");
+let kartu = document.getElementById("kartu");
+const tombol = document.getElementById("tombolAksi");
 
-        function ubahkartu() {
-            kartu.innerHTML = `<h1 class="mt-1 font-semibold text-wrap animate__animated animate__zoomIn">Selamat Ulang Tahun... Semoga semoga dan semoga aamiin. doanya isi sendiri aja hehe... maap ucapannya h+1</h1>
-            <h1 class="mt-1 font-semibold text-wrap animate__animated animate__zoomIn">Thank you </h1>
-            <h2 class="mt-1 animate__animated animate__fadeIn">--Dari VIIII 🎂</h2>
-            <button class="p-2 bg-pink-300 text-white rounded mt-5 hover:bg-pink-600 transition ease-in w-full animate__animated animate__delay-1s animate__pulse" onclick="refresh()">
-                udah segitu aja sii ✌️
-            </button>`;
-        }
+function ubahkartu() {
+  kartu.innerHTML = `<h1 class="mt-1 font-semibold text-wrap animate__animated animate__zoomIn">Selamat Ulang Tahun... Semoga semoga dan semoga aamiin. doanya isi sendiri aja hehe... maap ucapannya h+1</h1>
+<h1 class="mt-1 font-semibold text-wrap animate__animated animate__zoomIn">Thank you </h1>
+<h2 class="mt-1 animate__animated animate__fadeIn">--Dari VIIII 🎂</h2>
+<button class="p-2 bg-pink-300 text-white rounded mt-5 hover:bg-pink-600 transition ease-in w-full" id="tombolRefresh">udah segitu aja sii ✌️</button>`;
+  
+  // Pasang ulang event untuk tombol refresh
+  document.getElementById("tombolRefresh")?.addEventListener("click", () => location.reload());
+}
 
-        function refresh() {
-            location.reload();
-        }
-    </script>
+tombol.addEventListener("click", () => {
+    // Saat tombol ditekan, ubah kartu (audio sudah mungkin berjalan atau akan dimulai oleh klik ini juga)
+    ubahkartu();
+});
+</script>
 </body>
 </html>
